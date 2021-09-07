@@ -344,7 +344,7 @@ const mostWinningSummonerTankCombo = async (matchDetails) => {
 // ######## { summoner: '27', cards: [ 27, 23, 26, '', '', '', '', 'earth', '' ] }
 
         ccc = teams.filter(x=>x.mana == matchDetails.mana)
-        // ccc = teams.filter(x=>x.mana == 13)
+        // ccc = teams.filter(x=>x.mana == 12)
         console.log('cccc####', ccc)
         if(ccc){
             ra = Math.floor(Math.random() * ccc.length)
