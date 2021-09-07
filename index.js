@@ -116,7 +116,7 @@ console.log("######w2")
                 .then(()=>console.log('start the match'))
                 .catch(async ()=>{
                     console.log('second attempt failed reloading from homepage...');
-                    await page.goto('https://splinterlands.io/');
+                    await page.goto('https://splinterlands.com/');
                     await page.waitForTimeout(5000);
                     await page.waitForXPath("//button[contains(., 'BATTLE')]", { timeout: 20000 })
                         .then(button => button.click())
@@ -227,14 +227,14 @@ const sleepingTime = sleepingTimeInMinutes * 60000;
             console.log('START ', process.env.ACCOUNT, new Date().toLocaleString())
             const browser = await puppeteer.launch({
                 headless: true,
-                args: ['--no-sandbox']
+                // args: ['--no-sandbox']
             }); // default is true
             const page = await browser.newPage();
             await page.setDefaultNavigationTimeout(500000);
             await page.on('dialog', async dialog => {
                 await dialog.accept();
             });
-            page.goto('https://splinterlands.io/');
+            page.goto('https://splinterlands.com/');
             console.log('getting user cards collection from splinterlands API...')
             const myCards = await getCards()
                 .then((x)=>{console.log('cards retrieved'); return x})

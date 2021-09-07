@@ -260,7 +260,8 @@ const mostWinningSummonerTankCombo22 = async (possibleTeams, matchDetails) => {
 
 
 const mostWinningSummonerTankCombo = async (matchDetails) => {
-        teams = [{mana:12,team:[167,8,158,3]},
+        teams = [
+        {mana:12,team:[167,8,158,3]},
 {mana:13,team:[5,6,158,3]},
 {mana:13,team:[49,50,51,136]},
 
