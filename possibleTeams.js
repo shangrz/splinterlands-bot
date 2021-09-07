@@ -88,7 +88,7 @@ const getBattlesWithRuleset = (ruleset, mana, summoners) => {
         .catch((e) => console.log('fetch ', e))
 }
 
-const battlesFilterByManacap = async (mana, ruleset, summoners) => {
+const battlesFilterByManacap2 = async (mana, ruleset, summoners) => {
     const history = await getBattlesWithRuleset(ruleset, mana, summoners);
     if (history) {
         console.log('API battles returned ', history.length)
@@ -100,6 +100,31 @@ const battlesFilterByManacap = async (mana, ruleset, summoners) => {
     }
     const backupLength = historyBackup && historyBackup.length
     console.log('API battles did not return ', history)
+    console.log('Using Backup ', backupLength)
+    
+    return historyBackup.filter(
+        battle =>
+            battle.mana_cap == mana &&
+            (ruleset ? battle.ruleset === ruleset : true)
+    )
+}
+
+const battlesFilterByManacap = async (mana, ruleset, summoners) => {
+
+    // const history = await getBattlesWithRuleset(ruleset, mana, summoners);
+    // if (history) {
+    //     console.log('USE My setting', history.length)
+    //     return history.filter(
+    //         battle =>
+    //             battle.mana_cap == mana &&
+    //             (ruleset ? battle.ruleset === ruleset : true)
+    //     )
+    // }
+
+
+    
+    const backupLength = historyBackup && historyBackup.length
+    // console.log('API battles did not return ', history)
     console.log('Using Backup ', backupLength)
     
     return historyBackup.filter(
@@ -122,6 +147,28 @@ function compare(a, b) {
     }
     return comparison;
   }
+
+const cardsIdsforSelectedBattles2 = (mana, ruleset, splinters, summoners) => battlesFilterByManacap(mana, ruleset, summoners)
+    .then(x => {
+        return x.map(
+            (x) => {
+               
+                return [
+                    x.summoner_id ? parseInt(x.summoner_id) : '',
+                    x.monster_1_id ? parseInt(x.monster_1_id) : '',
+                    x.monster_2_id ? parseInt(x.monster_2_id) : '',
+                    x.monster_3_id ? parseInt(x.monster_3_id) : '',
+                    x.monster_4_id ? parseInt(x.monster_4_id) : '',
+                    x.monster_5_id ? parseInt(x.monster_5_id) : '',
+                    x.monster_6_id ? parseInt(x.monster_6_id) : '',
+                    summonerColor(x.summoner_id) ? summonerColor(x.summoner_id) : '',
+                    x.tot ? parseInt(x.tot) : '',
+                ]
+            }
+        ).filter(
+            team => splinters.includes(team[7])
+        ).sort(compare)
+    })
 
 const cardsIdsforSelectedBattles = (mana, ruleset, splinters, summoners) => battlesFilterByManacap(mana, ruleset, summoners)
     .then(x => {
@@ -159,18 +206,18 @@ const askFormation = function (matchDetails) {
 
 const possibleTeams = async (matchDetails) => {
     let possibleTeams = [];
-    while (matchDetails.mana > 10) {
+    // while (matchDetails.mana > 10) {
         console.log('check battles based on mana: '+matchDetails.mana)
-        possibleTeams = await askFormation(matchDetails)
-        if (possibleTeams.length > 0) {
-            return possibleTeams;
-        }
-        matchDetails.mana--;
-    }
+    //     possibleTeams = await askFormation(matchDetails)
+    //     if (possibleTeams.length > 0) {
+    //         return possibleTeams;
+    //     }
+    //     matchDetails.mana--;
+    // }
     return possibleTeams;
 }
 
-const mostWinningSummonerTankCombo = async (possibleTeams, matchDetails) => {
+const mostWinningSummonerTankCombo22 = async (possibleTeams, matchDetails) => {
     const bestCombination = await battles.mostWinningSummonerTank(possibleTeams)
     console.log('BEST SUMMONER and TANK', bestCombination)
     if (bestCombination.summonerWins >= 1 && bestCombination.tankWins > 1 && bestCombination.backlineWins > 1 && bestCombination.secondBacklineWins > 1 && bestCombination.thirdBacklineWins > 1 && bestCombination.forthBacklineWins > 1) {
@@ -211,6 +258,88 @@ const mostWinningSummonerTankCombo = async (possibleTeams, matchDetails) => {
     }
 }
 
+
+const mostWinningSummonerTankCombo = async (matchDetails) => {
+        teams = [{mana:12,team:[167,8,158,3]},
+{mana:13,team:[5,6,158,3]},
+{mana:13,team:[49,50,51,13]},
+{mana:14,team:[5,8,158,64,3]},
+{mana:14,team:[49,50,47,138,13]},
+{mana:15,team:[27,30,24,28]},
+{mana:15,team:[49,50,138,52,47]},
+{mana:15,team:[5,162,158,3]},
+{mana:16,team:[16,13,172,66,17]},
+{mana:16,team:[224,50,138,52,47]},
+{mana:17,team:[49,50,52,47,51]},
+{mana:18,team:[16,19,17,172,66]},
+{mana:18,team:[5,8,161,158,1]},
+{mana:18,team:[49,50,51,14,52,13]},
+{mana:19,team:[145,50,47,138,51,52]},
+{mana:19,team:[167,8,1,17,163]},
+{mana:19,team:[189,184,195,28]},
+{mana:19,team:[16,13,169,194,172,18]},
+{mana:20,team:[5,8,2,3,4,66]},
+{mana:20,team:[5,8,2,3,158,4]},
+{mana:20,team:[5,8,158,3,161,4]},
+{mana:20,team:[16,13,17,172,66,194]},
+{mana:20,team:[49,50,13,52,47,138,51]},
+{mana:20,team:[49,50,13,52,47,138,51]},
+{mana:21,team:[16,13,169,17,172,66,194]},
+{mana:22,team:[5,6,158,4,3,62,1]},
+{mana:22,team:[16,13,17,172,194,18]},
+{mana:23,team:[16,174,17,172,66,194]},
+{mana:23,team:[224,50,47,52,,138,141,51]},
+{mana:24,team:[189,184,182,195,28]},
+{mana:24,team:[224,50,47,51,141,52,46]},
+{mana:24,team:[49,50,141,138,47,51,139]},
+{mana:24,team:[16,19,18,172,66,17,169]},
+{mana:25,team:[16,13,17,172,66,194,18]},
+{mana:25,team:[5,162,159,158,3,62,1]},
+{mana:26,team:[49,50,52,192,47,141,51]},
+{mana:26,team:[167,162,159,161,163,1]},
+{mana:27,team:[16,19,17,194,66,173,18]},
+{mana:27,team:[49,140,50,141,47,51,138]},
+{mana:28,team:[167,162,1,158,66,161,163]},
+{mana:28,team:[16,174,17,194,172,66,18]},
+{mana:29,team:[167,162,4,158,161,163,194]},
+{mana:29,team:[16,174,18,17,172,66,194]},
+{mana:30,team:[224,8,161,158,1,161,163]},
+{mana:30,team:[49,140,50,52,51,141,192]},
+{mana:30,team:[16,190,17,172,66,194,192]},
+{mana:99,team:[38,190,151,152,36,146,192]}]
+
+
+// BEST TEAM [ 27, 23, 26, '', '', '', '', 'earth', '' ]
+// Dont play for the quest, and play this: [ '27', [ 27, 23, 26, '', '', '', '', 'earth', '' ] ]
+// ######## { summoner: '27', cards: [ 27, 23, 26, '', '', '', '', 'earth', '' ] }
+
+        ccc = teams.filter(x=>x.mana == matchDetails.mana)
+        console.log('cccc####', ccc)
+        if(ccc){
+            ra = Math.floor(Math.random() * ccc.length)
+            console.log('random ', ra  ,' in ',ccc.length )
+            const ii = ccc[ra].team;
+
+                   
+
+            const bestTeam =  [ ii[0] ? parseInt(ii[0]) : '',
+                    ii[1] ? parseInt(ii[1]) : '',
+                    ii[2] ? parseInt(ii[2]) : '',
+                    ii[3] ? parseInt(ii[3]) : '',
+                    ii[4] ? parseInt(ii[4]) : '',
+                    ii[5] ? parseInt(ii[5]) : '',
+                    ii[6] ? parseInt(ii[6]) : '',
+                    summonerColor(ii[0]) ? summonerColor(ii[0]) : '',
+                    '',] ;
+            console.log('BEST TEAM', bestTeam)
+            const summoner = bestTeam[0].toString();
+            return [summoner, bestTeam];
+
+        }
+         
+    
+}
+
 const teamSelection = async (possibleTeams, matchDetails, quest) => {
 
     //TEST V2 Strategy ONLY FOR PRIVATE API
@@ -222,39 +351,42 @@ const teamSelection = async (possibleTeams, matchDetails, quest) => {
 
     //check if daily quest is not completed
     console.log('quest custom option set as:', process.env.QUEST_PRIORITY, typeof process.env.QUEST_PRIORITY)
-    let priorityToTheQuest = process.env.QUEST_PRIORITY === 'false' ? false : true;
-    if(priorityToTheQuest && possibleTeams.length > 25 && quest && quest.total) {
-        const left = quest.total - quest.completed;
-        const questCheck = matchDetails.splinters.includes(quest.splinter) && left > 0;
-        const filteredTeams = possibleTeams.filter(team=>team[7]===quest.splinter)
-        console.log(left + ' battles left for the '+quest.splinter+' quest')
-        console.log('play for the quest ',quest.splinter,'? ',questCheck)
-        if(left > 0 && filteredTeams && filteredTeams.length > 10 && splinters.includes(quest.splinter)) {
-            console.log('PLAY for the quest with Teams: ',filteredTeams.length , filteredTeams)
-            const res = await mostWinningSummonerTankCombo(filteredTeams, matchDetails);
-            console.log('Play this for the quest:', res)
-            if (res[0] && res[1]) {
-                return { summoner: res[0], cards: res[1] };
-            }
-        }
-    }
+    // let priorityToTheQuest = process.env.QUEST_PRIORITY === 'false' ? false : true;
+    // if(priorityToTheQuest && possibleTeams.length > 25 && quest && quest.total) {
+    //     const left = quest.total - quest.completed;
+    //     const questCheck = matchDetails.splinters.includes(quest.splinter) && left > 0;
+    //     const filteredTeams = possibleTeams.filter(team=>team[7]===quest.splinter)
+    //     console.log(left + ' battles left for the '+quest.splinter+' quest')
+    //     console.log('play for the quest ',quest.splinter,'? ',questCheck)
+    //     if(left > 0 && filteredTeams && filteredTeams.length > 10 && splinters.includes(quest.splinter)) {
+    //         console.log('PLAY for the quest with Teams: ',filteredTeams.length , filteredTeams)
+    //         const res = await mostWinningSummonerTankCombo(filteredTeams, matchDetails);
+    //         console.log('Play this for the quest:', res)
+    //         if (res[0] && res[1]) {
+    //             return { summoner: res[0], cards: res[1] };
+    //         }
+    //     }
+    // }
 
     //find best combination (most used)
-    const res = await mostWinningSummonerTankCombo(possibleTeams, matchDetails);
+    const res = await mostWinningSummonerTankCombo(matchDetails);
     console.log('Dont play for the quest, and play this:', res)
     if (res[0] && res[1]) {
-        return { summoner: res[0], cards: res[1] };
+
+        let ooo = { summoner: res[0], cards: res[1] };
+        console.log('########', ooo);
+        return  ooo;
     }
 
-    let i = 0;
-    for (i = 0; i <= possibleTeams.length - 1; i++) {
-        if (matchDetails.splinters.includes(possibleTeams[i][7]) && helper.teamActualSplinterToPlay(possibleTeams[i]) !== '' && matchDetails.splinters.includes(helper.teamActualSplinterToPlay(possibleTeams[i]).toLowerCase())) {
-            console.log('Less than 25 teams available. SELECTED: ', possibleTeams[i]);
-            const summoner = card.makeCardId(possibleTeams[i][0].toString());
-            return { summoner: summoner, cards: possibleTeams[i] };
-        }
-        console.log('DISCARDED: ', possibleTeams[i])
-    }
+    // let i = 0;
+    // for (i = 0; i <= possibleTeams.length - 1; i++) {
+    //     if (matchDetails.splinters.includes(possibleTeams[i][7]) && helper.teamActualSplinterToPlay(possibleTeams[i]) !== '' && matchDetails.splinters.includes(helper.teamActualSplinterToPlay(possibleTeams[i]).toLowerCase())) {
+    //         console.log('Less than 25 teams available. SELECTED: ', possibleTeams[i]);
+    //         const summoner = card.makeCardId(possibleTeams[i][0].toString());
+    //         return { summoner: summoner, cards: possibleTeams[i] };
+    //     }
+    //     console.log('DISCARDED: ', possibleTeams[i])
+    // }
     throw new Error('NO TEAM available to be played.');
 }
 

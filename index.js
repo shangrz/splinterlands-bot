@@ -35,10 +35,11 @@ async function startBotPlayMatch(page, myCards, quest) {
         height: 1500,
         deviceScaleFactor: 1,
     });
-
-    await page.goto('https://splinterlands.io/');
+ console.log("######w0.1")
+    await page.goto('https://splinterlands.com/');
+     console.log("######w0.2")
     await page.waitForTimeout(8000);
-
+    console.log("######w1")
     let item = await page.waitForSelector('#log_in_button > button', {
         visible: true,
       })
@@ -53,12 +54,12 @@ async function startBotPlayMatch(page, myCards, quest) {
         });
     }
     
-    await page.waitForTimeout(8000);
+    // await page.waitForTimeout(8000);
+    // await page.reload();
+    await page.waitForTimeout(6000);
     await page.reload();
-    await page.waitForTimeout(8000);
-    await page.reload();
-    await page.waitForTimeout(8000);
-
+    await page.waitForTimeout(6000);
+console.log("######w2")
     await page.click('#menu_item_battle').then(()=>console.log('Entered...')).catch(e=>console.log('Battle Button not available'));
     await page.waitForTimeout(3000);
 
@@ -152,15 +153,16 @@ async function startBotPlayMatch(page, myCards, quest) {
     await page.waitForTimeout(2000);
     const possibleTeams = await ask.possibleTeams(matchDetails).catch(e=>console.log('Error from possible team API call: ',e));
 
-    if (possibleTeams && possibleTeams.length) {
-        console.log('Possible Teams based on your cards: ', possibleTeams.length, '\n', possibleTeams);
-    } else {
-        console.log('Error:', matchDetails, possibleTeams)
-        throw new Error('NO TEAMS available to be played');
-    }
+    // if (possibleTeams && possibleTeams.length) {
+    //     console.log('Possible Teams based on your cards: ', possibleTeams.length, '\n', possibleTeams);
+    // } else {
+    //     console.log('Error:', matchDetails, possibleTeams)
+    //     throw new Error('NO TEAMS available to be played');
+    // }
     
     //TEAM SELECTION
-    const teamToPlay = await ask.teamSelection(possibleTeams, matchDetails, quest);
+    // const teamToPlay = await ask.teamSelection(possibleTeams, matchDetails, quest);
+     const teamToPlay = await ask.teamSelection(1, matchDetails, quest);
 
     if (teamToPlay) {
         page.click('.btn--create-team')[0];
@@ -258,7 +260,6 @@ const sleepingTime = sleepingTimeInMinutes * 60000;
             console.log('Routine error at: ', new Date().toLocaleString(), e)
         }
         await console.log(process.env.ACCOUNT,'waiting for the next battle in', sleepingTime / 1000 / 60 , ' minutes at ', new Date(Date.now() +sleepingTime).toLocaleString() )
-        await console.log('If you need support for the bot, join the telegram group https://t.me/splinterlandsbot and discord https://discord.gg/bR6cZDsFSX,  dont pay scammers')
         await new Promise(r => setTimeout(r, sleepingTime));
     }
 })();
