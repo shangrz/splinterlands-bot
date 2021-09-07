@@ -7,6 +7,7 @@ async function login(page) {
             .then(() => page.type('#email', process.env.ACCOUNT))
             .then(() => page.focus('#password'))
             .then(() => page.type('#password', process.env.PASSWORD))
+            .then(() => page.waitForTimeout(1000))
 
             // .then(() => page.waitForSelector('#login_dialog_v2 > div > div > div.modal-body > div > div > form > div > div.col-sm-offset-1 > button', { visible: true }).then(() => page.click('#login_dialog_v2 > div > div > div.modal-body > div > div > form > div > div.col-sm-offset-1 > button')))
             .then(() => page.keyboard.press('Enter'))
