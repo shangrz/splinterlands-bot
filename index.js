@@ -227,7 +227,7 @@ const sleepingTime = sleepingTimeInMinutes * 60000;
             console.log('START ', process.env.ACCOUNT, new Date().toLocaleString())
             const browser = await puppeteer.launch({
                 headless: true,
-                // args: ['--no-sandbox']
+                args: ['--no-sandbox']
             }); // default is true
             const page = await browser.newPage();
             await page.setDefaultNavigationTimeout(500000);
