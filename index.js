@@ -31,15 +31,12 @@ async function startBotPlayMatch(page, myCards, quest) {
     }
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
     await page.setViewport({
-        width: 1800,
-        height: 1500,
-        deviceScaleFactor: 1,
+        width: 1200,
+        height: 1080,
+        deviceScaleFactor: 0.4,
     });
- console.log("######w0.1")
     await page.goto('https://splinterlands.com/');
-     console.log("######w0.2")
     await page.waitForTimeout(8000);
-    console.log("######w1")
     let item = await page.waitForSelector('#log_in_button > button', {
         visible: true,
       })
@@ -229,7 +226,7 @@ const sleepingTime = sleepingTimeInMinutes * 60000;
         try {
             console.log('START ', process.env.ACCOUNT, new Date().toLocaleString())
             const browser = await puppeteer.launch({
-                headless: true,
+                headless: false,
                 args: ['--no-sandbox']
             }); // default is true
             const page = await browser.newPage();
